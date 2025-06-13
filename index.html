@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surpresa do Amor</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    .modo-surpresa {
+      height: 100vh;
+      background: #1e1e1e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .modo-surpresa button {
+      padding: 1rem 2rem;
+      background: #ff5e78;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .modo-surpresa button:hover {
+      background: #e64866;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 4s linear infinite;
+      pointer-events: none;
+    }
+
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      top: 0;
+      left: -10px;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    #main-content {
+      display: none;
+      padding: 2rem;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      margin: 2rem auto;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .carousel-wrapper img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: opacity 0.5s ease;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      top: 45%;
+      width: 100%;
+      transform: translateY(-50%);
+      padding: 0 10px;
+    }
+
+    .carousel-controls button {
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .carousel-controls button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mapa {
+      margin-top: 2rem;
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .mapa h2 {
+      margin-bottom: 1rem;
+    }
+
+    .mapa img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .mensagem-carinho {
+      margin-top: 3rem;
+      background: #1e1e1e;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .mensagem-carinho h2 {
+      margin-bottom: 1rem;
+      color: #ff5e78;
+    }
+
+    .mensagem-carinho p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+    .contador-amor-efeito {
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, #ff5e78, #ff85a2, #ffa6c1);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 94, 120, 0.5);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      overflow: hidden;
+      animation: pulsar 2s infinite alternate;
+    }
+
+    .contador-amor-efeito::before,
+    .contador-amor-efeito::after {
+      content: "💗";
+      font-size: 2rem;
+      position: absolute;
+      animation: flutuar 4s linear infinite;
+      opacity: 0.4;
+    }
+
+    .contador-amor-efeito::before {
+      top: -10px;
+      left: 10%;
+    }
+
+    .contador-amor-efeito::after {
+      bottom: -10px;
+      right: 10%;
+    }
+
+    .contador-amor-efeito h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 5px rgba(255,255,255,0.4);
+    }
+
+    #contador-tempo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    @keyframes pulsar {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 94, 120, 0.5); }
+      100% { transform: scale(1.03); box-shadow: 0 0 35px rgba(255, 94, 120, 0.8); }
+    }
+
+    @keyframes flutuar {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+      50% { transform: translateY(-20px) rotate(15deg); opacity: 0.6; }
+      100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="musicaFundo" src="musica.mp3"></audio>
+
+  <div class="modo-surpresa">
+    <h1>Não clique aqui!</h1>
+    <button onclick="ativarSurpresa()">Clique aqui só se você for muito curioso!</button>
+  </div>
+
+  <div class="hearts" id="hearts-container"></div>
+
+  <div id="main-content">
+    <h2 style="text-align:center;">✨ Galeria de Momentos ✨</h2>
+
+    <div class="carousel-wrapper">
+      <img id="imagemAtual" src="foto1.jpeg" alt="Foto" />
+      <div class="carousel-controls">
+        <button onclick="mudarSlide(-1)">❮</button>
+        <button onclick="mudarSlide(1)">❯</button>
+      </div>
+    </div>
+
+    <div id="frases-romanticas" style="text-align:center; margin-top: 3rem; font-size: 1.2rem;"></div>
+
+    <div class="mensagem-carinho">
+      <h2>🌸 Um carinho que ficou 🌸</h2>
+      <p>
+        Te amo, apesar de tudo.  
+        O que a gente viveu foi verdadeiro e especial, e isso nunca vai ser apagado.  
+        Foram momentos únicos, cheios de risos, carinho e histórias que vão ficar pra sempre no meu coração.  
+        Nem sempre as coisas saem como a gente sonha, mas o que tivemos foi real, e eu sou grato por cada segundo ao teu lado.  
+        Pode ser que nossos caminhos sigam separados, mas o sentimento, esse ainda mora aqui.  
+        Com carinho, com saudade... com amor.
+      </p>
+    </div>
+
+    <ul style="list-style:none; text-align:left; max-width:600px; margin:auto;">
+      <li>📅 14/02/2023 - Nosso primeiro "eu te amo"</li>
+      <li>🎶 02/03/2023 - Nossa música favorita tocando no carro</li>
+      <li>📸 18/03/2023 - A selfie mais boba e mais linda</li>
+    </ul>
+
+    <div class="contador-amor-efeito">
+      <h2>💖 Juntos (ou não) desde 20/12/2020... 💖</h2>
+      <div id="contador-tempo">Carregando...</div>
+    </div>
+  </div>
+
+  <script>
+    function ativarSurpresa() {
+      document.getElementById("musicaFundo").play();
+
+      for (let i = 0; i < 40; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.top = Math.random() * 100 + "%";
+        document.getElementById("hearts-container").appendChild(heart);
+      }
+
+      setTimeout(() => {
+        document.querySelector(".modo-surpresa").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }, 3000);
+    }
+
+    const imagens = Array.from({length: 22}, (_, i) => `foto${i+1}.jpeg`);
+    let index = 0;
+
+    function mudarSlide(direcao) {
+      index = (index + direcao + imagens.length) % imagens.length;
+      const img = document.getElementById("imagemAtual");
+      img.style.opacity = 0;
+
+      const novaImagem = new Image();
+      novaImagem.src = imagens[index];
+      novaImagem.onload = () => {
+        img.src = novaImagem.src;
+        img.style.opacity = 1;
+      };
+    }
+
+    const frases = [
+      "Nosso amor é como o vento... não posso ver, mas posso sentir.",
+      "Você foi a melhor parte dos meus dias.",
+      "Mesmo separados, levo você em cada batida do coração."
+    ];
+
+    let fraseIndex = 0;
+    let letraIndex = 0;
+
+    function digitarFrases() {
+      const elemento = document.getElementById("frases-romanticas");
+      if (fraseIndex >= frases.length) return;
+
+      elemento.innerHTML += frases[fraseIndex].charAt(letraIndex);
+      letraIndex++;
+
+      if (letraIndex < frases[fraseIndex].length) {
+        setTimeout(digitarFrases, 90);
+      } else {
+        fraseIndex++;
+        letraIndex = 0;
+        elemento.innerHTML += "<br><br>";
+        setTimeout(digitarFrases, 1200);
+      }
+    }
+
+    setTimeout(digitarFrases, 4000);
+
+    function atualizarContador() {
+      const inicio = new Date("2020-12-20T00:00:00");
+      const agora = new Date();
+      let diff = Math.floor((agora - inicio) / 1000);
+
+      const anos = Math.floor(diff / (365.25 * 24 * 60 * 60));
+      diff -= anos * 365.25 * 24 * 60 * 60;
+
+      const dias = Math.floor(diff / (24 * 60 * 60));
+      diff -= dias * 24 * 60 * 60;
+
+      const horas = Math.floor(diff / (60 * 60));
+      diff -= horas * 60 * 60;
+
+      const minutos = Math.floor(diff / 60);
+      const segundos = diff % 60;
+
+      const texto = `${anos} ano(s), ${dias} dia(s), ${horas}h ${minutos}m ${segundos}s`;
+      document.getElementById("contador-tempo").textContent = texto;
+    }
+
+    setInterval(atualizarContador, 1000);
+    atualizarContador();
+  </script>
+</body>
+</html>
